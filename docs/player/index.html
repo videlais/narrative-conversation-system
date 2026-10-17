@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conversation Player</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    .line { margin: 0.25rem 0; }
+    .speaker { font-weight: 700; }
+    .player-line { color: #0969da; }
+    #choices button { display: block; width: 100%; text-align: left; margin-top: 0.4rem; }
+    #transcript { max-height: 20rem; overflow: auto; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Conversation Player</h1>
+    <a href="../">Home</a>
+    <a href="../editor/">Editor</a>
+  </header>
+  <main>
+    <section>
+      <h2>1. Load a conversation</h2>
+      <div class="toolbar">
+        <input type="file" id="file" accept=".json,application/json">
+        <button id="example-btn">Load example</button>
+      </div>
+      <details>
+        <summary>Or paste JSON</summary>
+        <textarea id="paste" rows="8"></textarea>
+        <button id="paste-btn">Load pasted JSON</button>
+      </details>
+      <div id="messages" class="messages"></div>
+    </section>
+
+    <section id="setup" class="hidden">
+      <h2>2. Global variables</h2>
+      <p class="muted">Set the starting value of each flag, then start. Flags update live while playing.</p>
+      <div id="flags"></div>
+      <p><button id="start-btn" class="primary">Start conversation</button></p>
+    </section>
+
+    <section id="stage" class="hidden">
+      <h2 id="title"></h2>
+      <div id="current" class="card">
+        <div class="speaker" id="speaker"></div>
+        <div id="text"></div>
+      </div>
+      <div id="choices"></div>
+      <p class="muted" id="node-id"></p>
+    </section>
+
+    <section id="log" class="hidden">
+      <h2>Transcript</h2>
+      <div id="transcript"></div>
+    </section>
+  </main>
+  <script src="../narrative.js"></script>
+  <script src="player.js"></script>
+</body>
+</html>

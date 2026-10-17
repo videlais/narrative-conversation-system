@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Narrative Conversation System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Narrative Conversation System</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Tools</h2>
+      <ul>
+        <li><a href="editor/">Editor</a>: build a conversation from nodes, choices, and flags, then export it as JSON.</li>
+        <li><a href="player/">Player</a>: load a conversation JSON file, set global flags, and play through it.</li>
+        <li><a href="example-conversation.json">Example conversation JSON</a></li>
+      </ul>
+    </section>
+    <section>
+      <h2>Format</h2>
+      <p>A conversation file has a <code>title</code>, a <code>start</code> node ID, a
+        <code>flags</code> registry of shared boolean flags with initial values, and an array of
+        <code>nodes</code>. Each node has an <code>id</code>, <code>speaker</code>,
+        <code>text</code>, <code>next</code>, and <code>choices</code>. Each choice has
+        <code>text</code>, <code>target</code>, <code>conditions</code>, and <code>action</code>.</p>
+      <p class="muted">See the repository README for the full specification.</p>
+    </section>
+  </main>
+</body>
+</html>

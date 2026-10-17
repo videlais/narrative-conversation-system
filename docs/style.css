@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  color: #1f2328;
+  background: #f6f8fa;
+}
+
+header {
+  background: #24292f;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+header a {
+  color: #c9d1d9;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+section,
+.card {
+  background: #fff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+label.inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: normal;
+  margin-right: 1rem;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.4rem;
+  font: inherit;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+}
+
+textarea {
+  min-height: 4rem;
+  resize: vertical;
+}
+
+button {
+  font: inherit;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  background: #f6f8fa;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #eaeef2;
+}
+
+button.primary {
+  background: #1f883d;
+  border-color: #1a7f37;
+  color: #fff;
+}
+
+button.danger {
+  color: #cf222e;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.choice {
+  border-left: 3px solid #0969da;
+  background: #f6f8fa;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.messages {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+}
+
+.messages.error {
+  color: #cf222e;
+}
+
+.messages.ok {
+  color: #1a7f37;
+}
+
+pre {
+  background: #f6f8fa;
+  padding: 0.75rem;
+  overflow: auto;
+  max-height: 24rem;
+  font-size: 0.8rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.muted {
+  color: #57606a;
+  font-size: 0.9rem;
+}

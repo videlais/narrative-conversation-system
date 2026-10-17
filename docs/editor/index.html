@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conversation Editor</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <h1>Conversation Editor</h1>
+    <a href="../">Home</a>
+    <a href="../player/">Player</a>
+  </header>
+  <main>
+    <div class="toolbar">
+      <button id="new-btn">New</button>
+      <button id="example-btn">Load example</button>
+      <label class="inline"><span>Import JSON</span><input type="file" id="import-file" accept=".json,application/json"></label>
+      <button id="validate-btn">Validate</button>
+      <button id="export-btn" class="primary">Export JSON</button>
+    </div>
+    <div id="messages" class="messages"></div>
+
+    <section>
+      <h2>Conversation</h2>
+      <div class="row">
+        <div>
+          <label for="title">Title</label>
+          <input type="text" id="title">
+        </div>
+        <div>
+          <label for="start">Start node</label>
+          <select id="start"></select>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Flags</h2>
+      <p class="muted">Shared boolean flags. Choices can require a flag (condition) or set one to true (action).</p>
+      <div id="flags"></div>
+      <button id="add-flag-btn">+ Add flag</button>
+    </section>
+
+    <section>
+      <h2>Nodes</h2>
+      <div id="nodes"></div>
+      <button id="add-node-btn">+ Add node</button>
+    </section>
+
+    <section>
+      <h2>JSON preview</h2>
+      <pre id="preview"></pre>
+    </section>
+  </main>
+  <script src="../narrative.js"></script>
+  <script src="editor.js"></script>
+</body>
+</html>
