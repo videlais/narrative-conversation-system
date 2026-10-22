@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Conversation Player</title>
+  <title>Story Player</title>
   <link rel="stylesheet" href="../style.css">
   <style>
     .line { margin: 0.25rem 0; }
@@ -15,13 +15,13 @@
 </head>
 <body>
   <header>
-    <h1>Conversation Player</h1>
+    <h1>Story Player</h1>
     <a href="../">Home</a>
     <a href="../editor/">Editor</a>
   </header>
   <main>
     <section>
-      <h2>1. Load a conversation</h2>
+      <h2>1. Load a Story</h2>
       <div class="toolbar">
         <input type="file" id="file" accept=".json,application/json">
         <button id="example-btn">Load example</button>
@@ -34,15 +34,21 @@
       <div id="messages" class="messages"></div>
     </section>
 
-    <section id="setup" class="hidden">
-      <h2>2. Global variables</h2>
-      <p class="muted">Set the starting value of each flag, then start. Flags update live while playing.</p>
+    <section id="setup">
+      <h2>2. Player fact registry (outside Story JSON)</h2>
+      <p class="muted">Register typed facts and set their starting values here (booleans use true or false). This player-only registry lasts for this page session and is kept when you load another Story. Actions update values live; Restart restores the values captured at Start. Deleted values appear as empty inputs marked "(deleted)"; entering a value restores them.</p>
+      <label for="flag-id">Fact ID</label>
+      <input type="text" id="flag-id">
+      <label for="fact-type">Fact type</label>
+      <select id="fact-type"></select>
+      <button id="add-flag-btn">Register fact</button>
+      <button id="register-btn">Register referenced facts with default values</button>
       <div id="flags"></div>
-      <p><button id="start-btn" class="primary">Start conversation</button></p>
+      <p><button id="start-btn" class="primary" disabled>Start Story</button></p>
     </section>
 
     <section id="stage" class="hidden">
-      <h2 id="title"></h2>
+      <h2>Story</h2>
       <div id="current" class="card">
         <div class="speaker" id="speaker"></div>
         <div id="text"></div>

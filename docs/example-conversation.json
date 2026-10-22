@@ -1,43 +1,30 @@
 {
-  "title": "The Missing Caravan",
   "start": "intro",
-  "flags": [
-    {
-      "id": "accepted_task",
-      "initial": false,
-      "description": "The player agreed to search for the missing caravan."
-    },
-    {
-      "id": "read_report",
-      "initial": false,
-      "description": "The player has read the patrol report."
-    }
-  ],
   "nodes": [
     {
       "id": "intro",
       "speaker": "captain_reyes",
       "text": "You there. You look like someone who can handle a sword. A supply caravan vanished on the north road two nights ago.",
-      "next": "offer",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "offer", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "offer",
       "speaker": "captain_reyes",
       "text": "My soldiers are stretched thin. Will you find out what happened to it?",
-      "next": "",
       "choices": [
         {
           "text": "I'll do it.",
           "target": "accept",
-          "conditions": "",
-          "action": "accepted_task"
+          "conditions": [],
+          "action": { "fact": "accepted_task", "action": "update", "boolValue": true }
         },
         {
           "text": "Not my problem.",
           "target": "refuse",
-          "conditions": "",
-          "action": ""
+          "conditions": [],
+          "action": null
         }
       ]
     },
@@ -45,57 +32,62 @@
       "id": "accept",
       "speaker": "captain_reyes",
       "text": "Good. Ask me anything you need before you leave.",
-      "next": "hub",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "hub", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "refuse",
       "speaker": "captain_reyes",
       "text": "Then at least hear me out. Someone in this town might care, even if you don't.",
-      "next": "hub",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "hub", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "hub",
       "speaker": "captain_reyes",
       "text": "What do you want to know?",
-      "next": "",
       "choices": [
         {
           "text": "What was the caravan carrying?",
           "target": "q_cargo",
-          "conditions": "",
-          "action": ""
+          "conditions": [],
+          "action": null
         },
         {
           "text": "Can I see the patrol report?",
           "target": "q_report",
-          "conditions": "",
-          "action": "read_report"
+          "conditions": [],
+          "action": { "fact": "read_report", "action": "update", "boolValue": true }
         },
         {
           "text": "The report is signed by a scout I don't recognize. Who is she?",
           "target": "q_signature",
-          "conditions": "read_report",
-          "action": ""
+          "conditions": [
+            { "fact": "read_report", "comparison": "equals", "boolValue": true }
+          ],
+          "action": null
         },
         {
           "text": "Fine. I'll take the job after all.",
           "target": "accept",
-          "conditions": "",
-          "action": "accepted_task"
+          "conditions": [],
+          "action": { "fact": "accepted_task", "action": "update", "boolValue": true }
         },
         {
           "text": "I'm heading north now.",
           "target": "farewell_accepted",
-          "conditions": "accepted_task",
-          "action": ""
+          "conditions": [
+            { "fact": "accepted_task", "comparison": "equals", "boolValue": true }
+          ],
+          "action": null
         },
         {
           "text": "I'm leaving.",
           "target": "farewell",
-          "conditions": "",
-          "action": ""
+          "conditions": [],
+          "action": null
         }
       ]
     },
@@ -103,35 +95,36 @@
       "id": "q_cargo",
       "speaker": "captain_reyes",
       "text": "Grain, mostly. And a locked chest from the capital that nobody will tell me about.",
-      "next": "hub",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "hub", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "q_report",
       "speaker": "captain_reyes",
       "text": "Here. Wagon tracks leave the road near the old mill, then stop. No bodies, no blood.",
-      "next": "hub",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "hub", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "q_signature",
       "speaker": "captain_reyes",
       "text": "Ilsa Varn. She joined the patrol last month. I haven't seen her since she filed that report.",
-      "next": "hub",
-      "choices": []
+      "choices": [
+        { "text": "Continue", "target": "hub", "conditions": [], "action": null }
+      ]
     },
     {
       "id": "farewell_accepted",
       "speaker": "captain_reyes",
       "text": "Start at the old mill. And watch your back.",
-      "next": "",
       "choices": []
     },
     {
       "id": "farewell",
       "speaker": "captain_reyes",
       "text": "Suit yourself. The road won't get any safer on its own.",
-      "next": "",
       "choices": []
     }
   ]

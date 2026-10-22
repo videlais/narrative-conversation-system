@@ -1,6 +1,7 @@
 let story = null;
-let nodesById = {};
-let flags = {};
+let nodesById = new Map();
+let flags = new Map();
+const registry = [];
 
 const messagesEl = document.getElementById("messages");
 const flagsEl = document.getElementById("flags");
@@ -15,58 +16,85 @@ function load(data) {
   const errors = Narrative.validate(data);
   if (errors.length) {
     messagesEl.className = "messages error";
-    messagesEl.textContent = "This conversation has problems:\n" + errors.join("\n");
-    show("setup", false);
+    messagesEl.textContent = "This Story has problems:\n" + errors.join("\n");
+    story = null;
+    document.getElementById("start-btn").disabled = true;
     show("stage", false);
     show("log", false);
     return;
   }
   story = data;
-  nodesById = {};
+  nodesById = new Map();
   story.nodes.forEach(function (node) {
-    nodesById[node.id] = node;
+    nodesById.set(node.id, node);
   });
-  flags = {};
-  story.flags.forEach(function (flag) {
-    flags[flag.id] = flag.initial;
+  flags = new Map();
+  registry.forEach(function (flag) {
+    flags.set(flag.id, flag.initial);
   });
   messagesEl.className = "messages ok";
-  messagesEl.textContent = "Loaded \"" + story.title + "\" (" + story.nodes.length + " nodes).";
+  messagesEl.textContent = "Loaded Story (" + story.nodes.length + " nodes).";
   renderFlags();
   show("setup", true);
   show("stage", false);
   show("log", false);
+  checkRegistry();
 }
 
 function loadText(text) {
+  let data;
   try {
-    load(JSON.parse(text));
+    data = JSON.parse(text);
   } catch (err) {
     messagesEl.className = "messages error";
     messagesEl.textContent = "Invalid JSON: " + err.message;
+    story = null;
+    document.getElementById("start-btn").disabled = true;
+    show("stage", false);
+    show("log", false);
+    return;
   }
+  load(data);
+}
+
+function checkRegistry() {
+  const errors = story ? Narrative.validate(story, registry) : ["Load a valid Story first."];
+  document.getElementById("start-btn").disabled = errors.length > 0;
+  messagesEl.className = "messages " + (errors.length ? "error" : "ok");
+  messagesEl.textContent = errors.length ? errors.join("\n") : "Story and player registry are ready.";
 }
 
 function renderFlags() {
   flagsEl.replaceChildren();
-  if (story.flags.length === 0) {
-    flagsEl.textContent = "This conversation has no flags.";
+  if (registry.length === 0) {
+    flagsEl.textContent = "The player registry is empty.";
     return;
   }
-  story.flags.forEach(function (flag) {
+  registry.forEach(function (flag) {
     const box = document.createElement("input");
-    box.type = "checkbox";
-    box.checked = flags[flag.id];
+    box.type = "text";
+    box.value = flags.has(flag.id) ? String(flags.get(flag.id)) : "";
+    box.placeholder = flags.has(flag.id) ? "" : "(deleted)";
+    box.setAttribute("aria-label", flag.id + " value (" + flag.type + ")");
     box.addEventListener("change", function () {
-      flags[flag.id] = box.checked;
-      if (!document.getElementById("stage").classList.contains("hidden")) {
-        renderNode(currentId);
+      try {
+        const value = Narrative.parseValue(flag.type, box.value);
+        box.setCustomValidity("");
+        flags.set(flag.id, value);
+        flag.initial = value;
+        checkRegistry();
+        if (!document.getElementById("stage").classList.contains("hidden")) renderNode(currentId);
+      } catch (err) {
+        box.setCustomValidity(err.message);
+        box.reportValidity();
+        messagesEl.className = "messages error";
+        messagesEl.textContent = err.message + " The last valid value is unchanged.";
       }
     });
     const label = document.createElement("label");
     label.className = "inline";
     label.title = flag.description;
-    label.append(box, flag.id);
+    label.append(flag.id + " (" + flag.type + ")", box);
     const desc = document.createElement("span");
     desc.className = "muted";
     desc.textContent = flag.description;
@@ -91,7 +119,7 @@ let currentId = null;
 
 function goTo(id) {
   currentId = id;
-  const node = nodesById[id];
+  const node = nodesById.get(id);
   addTranscript(node.speaker, node.text, false);
   renderNode(id);
 }
@@ -104,35 +132,35 @@ function button(text, onClick) {
 }
 
 function renderNode(id) {
-  const node = nodesById[id];
+  const node = nodesById.get(id);
   document.getElementById("speaker").textContent = node.speaker;
   document.getElementById("text").textContent = node.text;
   document.getElementById("node-id").textContent = "Node: " + node.id;
   choicesEl.replaceChildren();
 
-  if (node.next !== "") {
-    choicesEl.append(button("Continue ▸", function () { goTo(node.next); }));
-    return;
-  }
-
   // Unmet conditions hide the choice entirely.
   const visible = node.choices.filter(function (choice) {
-    return choice.conditions === "" || flags[choice.conditions] === true;
+    return Narrative.conditionsMet(choice.conditions, flags);
   });
 
   if (node.choices.length === 0) {
     choicesEl.append(document.createTextNode("— End of conversation —"));
   } else if (visible.length === 0) {
-    choicesEl.append(document.createTextNode("— No choices are currently available (check the flags) —"));
+    choicesEl.append(document.createTextNode("— No choices are currently available (check the facts) —"));
   }
 
   visible.forEach(function (choice) {
     choicesEl.append(button(choice.text, function () {
-      addTranscript("You", choice.text, true);
-      if (choice.action !== "") {
-        flags[choice.action] = true;
-        renderFlags();
+      try {
+        Narrative.applyAction(choice.action, flags);
+      } catch (err) {
+        messagesEl.className = "messages error";
+        messagesEl.textContent = "Could not apply action: " + err.message;
+        return;
       }
+      checkRegistry();
+      addTranscript("You", choice.text, true);
+      renderFlags();
       goTo(choice.target);
     }));
   });
@@ -142,30 +170,37 @@ function renderNode(id) {
   }
 }
 
-let startingFlags = {};
+let startingFlags = new Map();
 
 function restart() {
-  flags = Object.assign({}, startingFlags);
+  flags = new Map(startingFlags);
   renderFlags();
   start();
 }
 
 function start() {
   transcriptEl.replaceChildren();
-  document.getElementById("title").textContent = story.title;
   show("stage", true);
   show("log", true);
   goTo(story.start);
 }
 
 document.getElementById("start-btn").addEventListener("click", function () {
-  startingFlags = Object.assign({}, flags);
+  if (!story || Narrative.validate(story, registry).length) {
+    checkRegistry();
+    return;
+  }
+  startingFlags = new Map(flags);
   start();
 });
 
 document.getElementById("file").addEventListener("change", function (event) {
   const file = event.target.files[0];
-  if (file) file.text().then(loadText);
+  if (file) file.text().then(loadText).catch(function (err) {
+    messagesEl.className = "messages error";
+    messagesEl.textContent = "Could not read file: " + err.message;
+  });
+  event.target.value = "";
 });
 
 document.getElementById("paste-btn").addEventListener("click", function () {
@@ -174,10 +209,58 @@ document.getElementById("paste-btn").addEventListener("click", function () {
 
 document.getElementById("example-btn").addEventListener("click", function () {
   fetch("../example-conversation.json")
-    .then(function (res) { return res.text(); })
+    .then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    })
     .then(loadText)
     .catch(function (err) {
       messagesEl.className = "messages error";
       messagesEl.textContent = "Could not load example: " + err.message;
     });
 });
+
+function register(fact) {
+  registry.push(fact);
+  flags.set(fact.id, fact.initial);
+}
+
+document.getElementById("add-flag-btn").addEventListener("click", function () {
+  const input = document.getElementById("flag-id");
+  const id = input.value.trim();
+  if (!id || registry.some(function (flag) { return flag.id === id; })) {
+    messagesEl.className = "messages error";
+    messagesEl.textContent = "Enter a nonempty, unique fact ID.";
+    return;
+  }
+  const type = document.getElementById("fact-type").value;
+  register({ id: id, type: type, initial: Narrative.defaultValue(type), description: "" });
+  input.value = "";
+  renderFlags();
+  checkRegistry();
+});
+
+document.getElementById("register-btn").addEventListener("click", function () {
+  if (!story) {
+    checkRegistry();
+    return;
+  }
+  try {
+    Narrative.registerReferenced(story, registry).forEach(register);
+  } catch (err) {
+    messagesEl.className = "messages error";
+    messagesEl.textContent = err.message;
+    return;
+  }
+  renderFlags();
+  checkRegistry();
+});
+
+Narrative.valueTypes.forEach(function (type) {
+  const option = document.createElement("option");
+  option.value = type;
+  option.textContent = type;
+  document.getElementById("fact-type").append(option);
+});
+document.getElementById("fact-type").value = "boolValue";
+renderFlags();
