@@ -1,0 +1,20 @@
+{
+  "name": "com.videlais.narrative",
+  "version": "0.1.0",
+  "displayName": "Narrative Conversations and Barks",
+  "description": "JSON-driven conversations and rule-based barks sharing typed external facts.",
+  "unity": "6000.0",
+  "author": {
+    "name": "videlais"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
+  },
+  "samples": [
+    {
+      "displayName": "Conversation and Barks",
+      "description": "An on-screen conversation and Mara bark demo sharing one runtime fact store.",
+      "path": "Samples~/ConversationAndBarks"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "characterId": "mara",
+  "characterName": "Mara",
+  "rules": [
+    {
+      "id": "enter_general",
+      "trigger": "EnterZone",
+      "conditions": [],
+      "priority": 0,
+      "cooldownSeconds": 2,
+      "playOnce": false,
+      "lines": ["Let's see what's here.", "Stay close. We keep moving."]
+    },
+    {
+      "id": "enter_lab",
+      "trigger": "EnterZone",
+      "conditions": [{ "fact": "zone", "comparison": "equals", "stringValue": "lab" }],
+      "priority": 0,
+      "cooldownSeconds": 8,
+      "playOnce": false,
+      "lines": ["Someone left this lab in a hurry.", "I don't like how clean these tables are."]
+    },
+    {
+      "id": "enter_hurt",
+      "trigger": "EnterZone",
+      "conditions": [{ "fact": "healthFraction", "comparison": "lessThan", "floatValue": 0.4 }],
+      "priority": 1,
+      "cooldownSeconds": 10,
+      "playOnce": false,
+      "lines": ["Please tell me there's a medical kit here.", "I'm bleeding. Keep an eye on the door."]
+    },
+    {
+      "id": "enter_boss",
+      "trigger": "EnterZone",
+      "conditions": [{ "fact": "bossPresent", "comparison": "equals", "boolValue": true }],
+      "priority": 10,
+      "cooldownSeconds": 10,
+      "playOnce": false,
+      "lines": ["That thing is huge. Get behind cover!", "Company. The very large, very angry kind."]
+    },
+    {
+      "id": "enter_supplies",
+      "trigger": "EnterZone",
+      "conditions": [
+        { "fact": "supplies", "comparison": "greaterThanEqual", "intValue": 3 },
+        { "fact": "healthFraction", "comparison": "greaterThan", "floatValue": 0.4 },
+        { "fact": "zone", "comparison": "notEquals", "stringValue": "lab" }
+      ],
+      "priority": 1,
+      "cooldownSeconds": 10,
+      "playOnce": false,
+      "lines": ["Three supply crates. Finally, a room I like."]
+    },
+    {
+      "id": "enter_discovery",
+      "trigger": "EnterZone",
+      "conditions": [
+        { "fact": "zone", "comparison": "equals", "stringValue": "lab" },
+        { "fact": "experimentsDiscovered", "comparison": "equals", "boolValue": true },
+        { "fact": "healthFraction", "comparison": "lessThanEqual", "floatValue": 1.0 }
+      ],
+      "priority": 2,
+      "cooldownSeconds": 0,
+      "playOnce": true,
+      "lines": ["This is where they did it. We need to remember these people."]
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Videlais.Narrative.Unity",
+  "rootNamespace": "Videlais.Narrative.Unity",
+  "references": ["Videlais.Narrative"]
+}

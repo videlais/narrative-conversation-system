@@ -1,0 +1,6 @@
+{
+  "name": "Videlais.Narrative",
+  "rootNamespace": "Videlais.Narrative",
+  "references": ["Unity.Newtonsoft.Json"],
+  "noEngineReferences": true
+}

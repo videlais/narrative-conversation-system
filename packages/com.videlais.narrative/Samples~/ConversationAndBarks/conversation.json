@@ -1,0 +1,52 @@
+{
+  "start": "offer",
+  "nodes": [
+    {
+      "id": "offer",
+      "speaker": "captain_reyes",
+      "text": "Will you investigate the abandoned lab with Mara?",
+      "choices": [
+        {
+          "text": "I'll take the job.",
+          "target": "hub",
+          "conditions": [],
+          "action": { "fact": "accepted_task", "action": "update", "boolValue": true }
+        },
+        { "text": "Tell me more first.", "target": "hub", "conditions": [], "action": null }
+      ]
+    },
+    {
+      "id": "hub",
+      "speaker": "captain_reyes",
+      "text": "The report describes experiments in the lab. Mara should hear about them.",
+      "choices": [
+        {
+          "text": "Read the report.",
+          "target": "report",
+          "conditions": [],
+          "action": { "fact": "read_report", "action": "update", "boolValue": true }
+        },
+        {
+          "text": "Tell Mara about the experiments.",
+          "target": "discovery",
+          "conditions": [{ "fact": "read_report", "comparison": "equals", "boolValue": true }],
+          "action": { "fact": "experimentsDiscovered", "action": "update", "boolValue": true }
+        },
+        { "text": "Leave.", "target": "end", "conditions": [], "action": null }
+      ]
+    },
+    {
+      "id": "report",
+      "speaker": "captain_reyes",
+      "text": "The test subjects were people from this town.",
+      "choices": [{ "text": "Continue", "target": "hub", "conditions": [], "action": null }]
+    },
+    {
+      "id": "discovery",
+      "speaker": "mara",
+      "text": "Then we need to see that lab for ourselves.",
+      "choices": [{ "text": "Continue", "target": "hub", "conditions": [], "action": null }]
+    },
+    { "id": "end", "speaker": "captain_reyes", "text": "Stay safe out there.", "choices": [] }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Videlais.Narrative.Tests",
+  "references": ["Videlais.Narrative", "Videlais.Narrative.Unity"],
+  "includePlatforms": ["Editor"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS", "NARRATIVE_TEST_FRAMEWORK"],
+  "versionDefines": [
+    {
+      "name": "com.unity.test-framework",
+      "expression": "1.0.0",
+      "define": "NARRATIVE_TEST_FRAMEWORK"
+    }
+  ],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

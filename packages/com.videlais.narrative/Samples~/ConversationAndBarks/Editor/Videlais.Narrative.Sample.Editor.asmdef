@@ -1,0 +1,5 @@
+{
+  "name": "Videlais.Narrative.Sample.Editor",
+  "references": ["Videlais.Narrative.Sample", "Videlais.Narrative.Unity"],
+  "includePlatforms": ["Editor"]
+}
